@@ -19,9 +19,10 @@ env:
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "terraform"
-  terraform:
-    name: 'Terraform'
+  
+  # Job para criar o bucket S3
+  s3create:
+    name: 'Criação do S3'
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -31,7 +32,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Passo: Configura as credenciais da AWS.
+      # Configura as credenciais da AWS.
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -40,39 +41,62 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # 3. Passo: Configura o Terraform no runner.
+      # Configura o Terraform no runner.
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
       
-      # 4. Passo: Inicializa o Terraform.
+      # Inicializa o Terraform.
       - name: Terraform Init
         run: terraform init
         working-directory: ./IaC/S3 # O diretório de trabalho agora é a pasta 'IaC'.
 
-      # 5. Passo: Cria um plano de execução.
+      # Cria um plano de execução.
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: ./IaC/S3
 
-      # 6. Passo: Aplica as alterações.
+      # Aplica as alterações para criação do S3 caso não exista.
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         working-directory: ./IaC/S3
         continue-on-error: true
 
 
+  aplicaterraform:
+    name: 'Job Principal - Aplicar Terraform'
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
 
-      # 4. Passo: Inicializa o Terraform.
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Configura as credenciais da AWS.
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      # Configura o Terraform no runner.
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # Inicializa o Terraform.
       - name: Terraform Init
         run: terraform init
         working-directory: ./IaC # O diretório de trabalho agora é a pasta 'IaC'.
 
-      # 5. Passo: Cria um plano de execução.
+      # Cria um plano de execução.
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: ./IaC
 
-      # 6. Passo: Aplica as alterações.
+      # Aplica as alterações.
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         working-directory: ./IaC

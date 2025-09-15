@@ -1,0 +1,39 @@
+---
+- name: Deploy HTML to Nginx servers (Homolog and Prod)
+  hosts: nginx
+  become: true
+
+  vars:
+    html_src_hml: FIAP-2025-MBA-DevOps-IaC/Ansible/files/index-hml.html
+    html_src_prd: FIAP-2025-MBA-DevOps-IaC/Ansible/files/index-prd.html
+    html_dest: /usr/share/nginx/html/index.html
+
+  tasks:
+    - name: Ensure Nginx is installed
+      yum:
+        name: nginx
+        state: present
+
+    - name: Copy HTML file for HML
+      copy:
+        src: "{{ html_src_hml }}"
+        dest: "{{ html_dest }}"
+        owner: root
+        group: root
+        mode: '0644'
+      when: "'hml' in group_names"
+
+    - name: Copy HTML file for PRD
+      copy:
+        src: "{{ html_src_prd }}"
+        dest: "{{ html_dest }}"
+        owner: root
+        group: root
+        mode: '0644'
+      when: "'prd' in group_names"
+
+    - name: Ensure Nginx is running
+      service:
+        name: nginx
+        state: started
+        enabled: true

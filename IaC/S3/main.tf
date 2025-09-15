@@ -13,7 +13,7 @@ provider "aws" {
 
 # Criar um bucket S3 para armazenar o State
 resource "aws_s3_bucket" "terraform_state" {
-  bucket = "terraform-state-avner-santos" # Substitua pelo nome desejado do bucket (deve ser globalmente único)
+  bucket = "terraform-state-mba-devops-2025" # Substitua pelo nome desejado do bucket (deve ser globalmente único)
 
   versioning {
     enabled = true

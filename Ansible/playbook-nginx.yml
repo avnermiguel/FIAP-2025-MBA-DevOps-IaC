@@ -4,8 +4,8 @@
   become: true
 
   vars:
-    html_src_hml: FIAP-2025-MBA-DevOps-IaC/Ansible/files/index-hml.html
-    html_src_prd: FIAP-2025-MBA-DevOps-IaC/Ansible/files/index-prd.html
+    html_src_hml: files/index-hml.html
+    html_src_prd: files/index-prd.html
     html_dest: /usr/share/nginx/html/index.html
 
   tasks:

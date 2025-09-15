@@ -36,7 +36,7 @@ module "nginx_instance_hml" {
   name          = "Nginx Server HML"
   depends_on    = [module.vpc, module.security_group]
   subnet_id     = module.vpc.subnet1_id
-  key_name      = "teste-remote-exec"
+  key_name      = "teste-remote-exec" # Substitua pelo nome do seu par de chaves
 }
 
 module "nginx_instance_prd" {
@@ -48,7 +48,7 @@ module "nginx_instance_prd" {
   name          = "Nginx Server PRD"
   depends_on    = [module.vpc, module.security_group]
   subnet_id     = module.vpc.subnet1_id
-  key_name      = "teste-remote-exec"
+  key_name      = "teste-remote-exec" # Substitua pelo nome do seu par de chaves
 }
 
 data "aws_secretsmanager_secret_version" "ssh_key" {
@@ -63,7 +63,7 @@ module "ansible_server" {
   security_groups = [module.security_group.security_group_id]
   name          = "Ansible Server"
   subnet_id     = module.vpc.subnet1_id
-  key_name      = "teste-remote-exec"
+  key_name      = "teste-remote-exec" # Substitua pelo nome do seu par de chaves
   ssh_key       = data.aws_secretsmanager_secret_version.ssh_key.secret_string
   nginx_hml_ip  = module.nginx_instance_hml.public_ip
   nginx_prd_ip  = module.nginx_instance_prd.public_ip

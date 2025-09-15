@@ -20,7 +20,7 @@ FIAP-2025-MBA-DevOps-IaC/
     -   `AWS_ACCESS_KEY_ID`
     -   `AWS_SECRET_ACCESS_KEY`
     -   `AWS_SESSION_TOKEN`
-- Criar um par de chaves na sua conta AWS.
+- Criar um par de chaves na sua conta AWS e definir a variável **key_name** no arquivo `./IaC/IaC/main.tf` .
 - Criar um segredo no AWS Secrets Manager com a chave **privada** criada, no formato de texto simples.
 - Definir um nome único para o bucket S3 nos arquivos `./IaC/S3/main.tf` e `./IaC/backend.tf`.
 

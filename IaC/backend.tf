@@ -1,9 +1,8 @@
 terraform {
   backend "s3" {
     bucket         = "terraform-state-mba-devops-2025"  # Usar o nome do bucket criado pelo Terraform
-    key            = "terraform.tfstate" # Nome do arquivo de estado
+    key            = "terraform.tfstate"
     region         = "us-east-1"      # Substitua pela sua região
-    # dynamodb_table = "terraform-locks" # Usar o nome da tabela DynamoDB criada pelo Terraform
-    encrypt        = true             # Habilitar a criptografia do State no S3
+    encrypt        = true
   }
 }

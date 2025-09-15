@@ -2,37 +2,29 @@
 
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 env:
   TF_VAR_aws_region: us-east-1
   AWS_REGION: us-east-1
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   
   # Job para criar o bucket S3
   s3create:
     name: 'Criação do S3'
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Configura as credenciais da AWS.
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -41,40 +33,32 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # Configura o Terraform no runner.
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
       
-      # Inicializa o Terraform.
       - name: Terraform Init
         run: terraform init
-        working-directory: ./IaC/S3 # O diretório de trabalho agora é a pasta 'IaC'.
+        working-directory: ./IaC/S3
 
-      # Cria um plano de execução.
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: ./IaC/S3
 
-      # Aplica as alterações para criação do S3 caso não exista.
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         working-directory: ./IaC/S3
         continue-on-error: true
 
-
+  # Job principal para aplicar o Terraform e criar a infraestrutura
   aplicaterraform:
     name: 'Job Principal - Aplicar Terraform'
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
     needs: s3create
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Configura as credenciais da AWS.
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -83,21 +67,17 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ env.AWS_REGION }}
 
-      # Configura o Terraform no runner.
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # Inicializa o Terraform.
       - name: Terraform Init
         run: terraform init
-        working-directory: ./IaC # O diretório de trabalho agora é a pasta 'IaC'.
+        working-directory: ./IaC
 
-      # Cria um plano de execução.
       - name: Terraform Plan
         run: terraform plan -out=tfplan
         working-directory: ./IaC
 
-      # Aplica as alterações.
       - name: Terraform Apply
         run: terraform apply -auto-approve tfplan
         working-directory: ./IaC

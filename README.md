@@ -34,7 +34,8 @@ Definição das atividades realizadas no pipeline:
     *   **Módulo Ansible:** É utilizado para criar uma instância e executar comandos via `remote-exec` para instalar o Ansible, criar o arquivo de inventário, copiar a chave SSH e executar o playbook.
 
 # Ansible
-O playbook do Ansible é utilizado para copiar os arquivos `index.html` para as respectivas instâncias de homologação e produção.
+O playbook do Ansible garante que o NGINX esteja instalado e rodando  nas instâncias de homologação e produção e também copia os arquivos `index.html` para as respectivas instâncias.
 
 # Observações
 O AWS Secrets Manager foi utilizado para preencher a variável `ssh_key` e permitir a conexão com as instâncias.
+Ao finalizar a execução do terraform principal retornará os IPs das instâncias, os IPs dos servidores NGINX podem ser acessados e retornará as páginas personalizadas garantindo que o projeto executou com sucesso.

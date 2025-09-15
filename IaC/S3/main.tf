@@ -8,7 +8,7 @@ terraform {
 }
 
 provider "aws" {
-  region = "us-east-1" # Substitua pela sua região
+  region = "us-east-1"
 }
 
 # Criar um bucket S3 para armazenar o State
@@ -19,7 +19,6 @@ resource "aws_s3_bucket" "terraform_state" {
     enabled = true
   }
 
-  # Impedir exclusão acidental do bucket
   lifecycle {
     prevent_destroy = false
   }

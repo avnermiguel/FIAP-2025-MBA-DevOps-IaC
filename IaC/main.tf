@@ -30,7 +30,7 @@ module "security_group" {
 module "nginx_instance_hml" {
   source = "./modules/ec2"
 
-  ami           = "ami-0de716d6197524dd9" # Substitua pela AMI da sua região
+  ami           = "ami-0de716d6197524dd9"
   instance_type = "t2.micro"
   security_groups = [module.security_group.security_group_id]
   name          = "Nginx Server HML"
@@ -42,7 +42,7 @@ module "nginx_instance_hml" {
 module "nginx_instance_prd" {
   source = "./modules/ec2"
 
-  ami           = "ami-0de716d6197524dd9" # Substitua pela AMI da sua região
+  ami           = "ami-0de716d6197524dd9"
   instance_type = "t2.micro"
   security_groups = [module.security_group.security_group_id]
   name          = "Nginx Server PRD"
@@ -58,7 +58,7 @@ data "aws_secretsmanager_secret_version" "ssh_key" {
 module "ansible_server" {
   source = "./modules/ansible"
 
-  ami           = "ami-0de716d6197524dd9" # Substitua pela AMI da sua região
+  ami           = "ami-0de716d6197524dd9"
   instance_type = "t2.micro"
   security_groups = [module.security_group.security_group_id]
   name          = "Ansible Server"
